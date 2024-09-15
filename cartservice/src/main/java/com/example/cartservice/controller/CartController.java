@@ -44,7 +44,7 @@ public class CartController {
         @ApiResponse(responseCode = "404", description = "Cart not found")
     })
     @GetMapping("/{cartId}")
-    public ResponseEntity<Cart> getCartById(@PathVariable Long cartId) {
+    public ResponseEntity<Cart> getCartById(@PathVariable Integer cartId) {
         Cart cart = cartService.getCartById(cartId);
         return ResponseEntity.ok(cart);
     }
@@ -57,7 +57,7 @@ public class CartController {
         @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PutMapping("/{cartId}/items")
-    public ResponseEntity<Cart> addItemToCart(@PathVariable Long cartId, @RequestBody CartItem item) {
+    public ResponseEntity<Cart> addItemToCart(@PathVariable Integer cartId, @RequestBody CartItem item) {
         Cart updatedCart = cartService.addItemToCart(cartId, item);
         return ResponseEntity.ok(updatedCart);
     }
@@ -68,7 +68,7 @@ public class CartController {
         @ApiResponse(responseCode = "404", description = "Cart or item not found")
     })
     @DeleteMapping("/{cartId}/items/{itemId}")
-    public ResponseEntity<Void> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId) {
+    public ResponseEntity<Void> removeItemFromCart(@PathVariable Integer cartId, @PathVariable Integer itemId) {
         cartService.removeItemFromCart(cartId, itemId);
         return ResponseEntity.ok().build();
     }
@@ -79,7 +79,7 @@ public class CartController {
         @ApiResponse(responseCode = "404", description = "Cart not found")
     })
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> clearCart(@PathVariable Long cartId) {
+    public ResponseEntity<Void> clearCart(@PathVariable Integer cartId) {
         cartService.clearCart(cartId);
         return ResponseEntity.ok().build();
     }
@@ -91,7 +91,7 @@ public class CartController {
         @ApiResponse(responseCode = "404", description = "Cart not found")
     })
     @GetMapping("/{cartId}/items")
-    public ResponseEntity<List<CartItem>> getAllItemsInCart(@PathVariable Long cartId) {
+    public ResponseEntity<List<CartItem>> getAllItemsInCart(@PathVariable Integer cartId) {
         List<CartItem> items = cartService.getAllItemsInCart(cartId);
         return ResponseEntity.ok(items);
     }

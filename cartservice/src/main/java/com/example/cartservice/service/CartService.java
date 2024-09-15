@@ -37,7 +37,7 @@ public class CartService {
         return savedUser.getCarts().get(savedUser.getCarts().size() - 1);
     }
 
-    public void clearCart(Long cartId) {
+    public void clearCart(Integer cartId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
         cart.getItems().clear();
@@ -45,12 +45,12 @@ public class CartService {
         cartRepository.save(cart);
     }
 
-    public Cart getCartById(Long cartId) {
+    public Cart getCartById(Integer cartId) {
         return cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
     }
 
-    public Cart addItemToCart(Long cartId, CartItem item) {
+    public Cart addItemToCart(Integer cartId, CartItem item) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
         cart.getItems().add(item);
@@ -58,7 +58,7 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public void removeItemFromCart(Long cartId, Long itemId) {
+    public void removeItemFromCart(Integer cartId, Integer itemId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
         cart.getItems().removeIf(item -> item.getId().equals(itemId));
@@ -73,7 +73,7 @@ public class CartService {
         cart.setTotalPrice(total);
     }
 
-    public List<CartItem> getAllItemsInCart(Long cartId) {
+    public List<CartItem> getAllItemsInCart(Integer cartId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
         return cart.getItems();

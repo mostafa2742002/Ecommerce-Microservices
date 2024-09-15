@@ -1,4 +1,4 @@
-package com.micro.userservice.entity;
+package com.micro.orderservice.entity;
 
 import java.math.BigDecimal;
 
@@ -18,7 +18,7 @@ public class CartItem {
     private Integer id;
 
     private String productId;
-    private Integer quantity;
+    private Long quantity;
     private BigDecimal price;
 
     // Getters and setters
