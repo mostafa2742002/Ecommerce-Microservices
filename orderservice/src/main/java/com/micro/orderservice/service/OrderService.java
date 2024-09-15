@@ -12,7 +12,6 @@ import com.micro.orderservice.exceptions.ResourceNotFoundException;
 import com.micro.orderservice.repo.CartRepository;
 import com.micro.orderservice.repo.OrderRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 @Service
