@@ -42,19 +42,19 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable @NotNull Long id) {
+    public ResponseEntity<Product> getProductById(@PathVariable @NotNull Integer id) {
         Product product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable @NotNull Long id, @RequestBody @Valid ProductDTO updatedProduct) {
+    public ResponseEntity<Product> updateProduct(@PathVariable @NotNull Integer id, @RequestBody @Valid ProductDTO updatedProduct) {
         Product updated = productService.updateProduct(id, updatedProduct);
         return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable @NotNull Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable @NotNull Integer id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }

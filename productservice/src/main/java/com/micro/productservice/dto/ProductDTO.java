@@ -22,5 +22,5 @@ public class ProductDTO {
     private BigDecimal price;
 
     @NotNull(message = "Product category cannot be null")
-    private Category category;
+    private Integer categoryId;
 }

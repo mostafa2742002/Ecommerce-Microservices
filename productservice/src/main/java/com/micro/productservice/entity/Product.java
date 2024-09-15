@@ -20,7 +20,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String name;
 
@@ -32,11 +32,11 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public Product(ProductDTO productDTO) {
+    public Product(ProductDTO productDTO, Category category) {
         this.name = productDTO.getName();
         this.description = productDTO.getDescription();
         this.price = productDTO.getPrice();
-        this.category = productDTO.getCategory();
+        this.category = category;
     }
-    
+
 }
