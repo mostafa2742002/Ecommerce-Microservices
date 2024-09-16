@@ -2,8 +2,6 @@ package com.micro.productservice.dto;
 
 import java.math.BigDecimal;
 
-import com.micro.productservice.entity.Category;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
