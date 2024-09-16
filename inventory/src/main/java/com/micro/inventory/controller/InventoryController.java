@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
+@Validated
 @RequestMapping("/api/inventory")
 public class InventoryController {
 
@@ -39,7 +43,7 @@ public class InventoryController {
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @PostMapping("/create")
-    public ResponseEntity<Inventory> createInventory(@RequestBody InventoryDTO inventoryDTO) {
+    public ResponseEntity<Inventory> createInventory(@RequestBody @Valid InventoryDTO inventoryDTO) {
         Product product = inventoryDTO.getProduct();
         Long stockQuantity = inventoryDTO.getStockQuantity();
         Inventory inventory = inventoryService.createOrUpdateInventory(product, stockQuantity);
@@ -53,7 +57,7 @@ public class InventoryController {
             @ApiResponse(responseCode = "400", description = "Insufficient stock")
     })
     @PostMapping("/buy")
-    public ResponseEntity<Void> buyProduct(@RequestBody InventoryDTO inventoryDTO) {
+    public ResponseEntity<Void> buyProduct(@RequestBody @Valid InventoryDTO inventoryDTO) {
         Product product = inventoryDTO.getProduct();
         Long quantity = inventoryDTO.getStockQuantity();
         inventoryService.buyProduct(product, quantity);
@@ -66,7 +70,7 @@ public class InventoryController {
             @ApiResponse(responseCode = "404", description = "Inventory not found")
     })
     @GetMapping("/{productId}")
-    public ResponseEntity<Inventory> getInventory(@PathVariable Integer productId) {
+    public ResponseEntity<Inventory> getInventory(@PathVariable @NotNull Integer productId) {
         Product product = new Product();
         product.setId(productId);
         Optional<Inventory> inventory = inventoryService.getInventoryByProduct(product);
@@ -89,7 +93,7 @@ public class InventoryController {
             @ApiResponse(responseCode = "404", description = "Inventory not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInventory(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteInventory(@PathVariable @NotNull Integer id) {
         inventoryService.deleteInventory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

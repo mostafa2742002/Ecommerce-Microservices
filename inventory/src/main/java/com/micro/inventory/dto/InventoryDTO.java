@@ -2,12 +2,15 @@ package com.micro.inventory.dto;
 
 import com.micro.inventory.entity.Product;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class InventoryDTO {
 
+    @NotNull(message = "Product ID cannot be null")
     private Integer productId;
+    @NotNull(message = "Stock quantity cannot be null")
     private Long stockQuantity;
 
     public InventoryDTO() {}
