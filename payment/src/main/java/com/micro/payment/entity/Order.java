@@ -36,5 +36,6 @@ public class Order {
 
     private BigDecimal totalPrice;
 
+    
     // Getters and setters
 }

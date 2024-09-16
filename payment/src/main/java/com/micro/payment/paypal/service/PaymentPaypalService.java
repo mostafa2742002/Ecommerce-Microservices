@@ -4,13 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.micro.payment.entity.User;
+import com.micro.payment.paypal.entity.Delivery;
 import com.micro.payment.paypal.entity.PaypalOrder;
-import com.micro.payment.paypal.entity.UserPayment;
-import com.micro.payment.paypal.repo.OrderRepository;
-import com.micro.payment.paypal.repo.UserPaymentRepository;
+import com.micro.payment.paypal.repo.DeliveryRepository;
 import com.micro.payment.repo.UserRepository;
 import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.ShippingAddress;
 import com.paypal.base.rest.PayPalRESTException;
 
 import lombok.AllArgsConstructor;
@@ -19,82 +18,60 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PaymentPaypalService {
 
-    private PaypalService paypalService;
-    private UserRepository userRepository;
-    private UserPaymentRepository userPaymentRepository;
-    private OrderRepository orderRepository; // For saving orders
+    private final PaypalService paypalService;
+    private final UserRepository userRepository;
 
-    public ResponseEntity<String> createPaymentIntent(Integer userId, Integer amount) {
+    private final DeliveryRepository deliveryRepository;
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public ResponseEntity<String> createPaymentIntent(Integer userId, Integer amount) throws PayPalRESTException {
 
-        UserPayment existingPayment = userPaymentRepository.findByUserId(userId);
-        if (existingPayment != null) {
-            userPaymentRepository.delete(existingPayment);
+        if(userRepository.findById(userId).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
         }
 
         amount = Math.max(amount, 0);
 
         PaypalOrder order = new PaypalOrder(amount, "USD", "paypal", "sale", "Buy Products");
 
-        String approvalUrl;
-        String paymentId;
-        try {
-            Payment payment = paypalService.createPayment(order.getPrice(), order.getCurrency(), order.getMethod(),
-                    order.getIntent(), order.getDescription(),
-                    "http://localhost:8080/payment/cancel",
-                    "http://localhost:8080/payment/success");
+        Payment payment = paypalService.createPayment(
+                order.getPrice(),
+                order.getCurrency(),
+                order.getMethod(),
+                order.getIntent(),
+                order.getDescription(),
+                "http://localhost:8085/payment/cancel",
+                "http://localhost:8085/payment/success");
 
-            paymentId = payment.getId();
-            approvalUrl = payment.getLinks().stream()
-                    .filter(link -> link.getRel().equals("approval_url"))
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Approval URL not found"))
-                    .getHref();
-        } catch (PayPalRESTException e) {
-            throw new RuntimeException("Error creating PayPal payment", e);
-        }
+        String approvalUrl = payment.getLinks().stream()
+                .filter(link -> link.getRel().equals("approval_url"))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Approval URL not found"))
+                .getHref();
 
-        UserPayment userPayment = new UserPayment();
-        userPayment.setUserId(userId);
-        userPayment.setPaymentId(paymentId);
-        userPayment.setApprovalUrl(approvalUrl);
-        userPaymentRepository.save(userPayment);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(approvalUrl);
+        return ResponseEntity.ok(approvalUrl);
     }
 
     public ResponseEntity<String> handleSuccess(String paymentId, String payerId) throws PayPalRESTException {
-        // try {
-            Payment payment = paypalService.executePayment(paymentId, payerId);
-            System.out.println(payment.toJSON());
-            // return ResponseEntity.status(HttpStatus.OK).body("Payment successful");
-            // if ("approved".equals(payment.getState())) {
-            //     UserPayment userPayment = userPaymentRepository.findByPaymentId(paymentId);
-            //     if (userPayment == null) {
-            //         throw new RuntimeException("User payment not found");
-            //     }
+        Payment payment = paypalService.executePayment(paymentId, payerId);
+        if (payment.getState().equals("approved")) {
 
-            //     // Save the order
-            //     Order order = new Order();
-            //     order.setPrice(Double.parseDouble(payment.getTransactions().get(0).getAmount().getTotal()));
-            //     order.setCurrency(payment.getTransactions().get(0).getAmount().getCurrency());
-            //     order.setMethod(payment.getPayer().getPaymentMethod());
-            //     order.setIntent(payment.getIntent());
-            //     order.setDescription(payment.getTransactions().get(0).getDescription());
-            //     orderRepository.save(order);
+            ShippingAddress shippingAddress = payment.getPayer().getPayerInfo().getShippingAddress();
 
-            //     // Clear the payment record after successful order processing
-            //     userPaymentRepository.delete(userPayment);
+            Delivery delivery = new Delivery();
+            delivery.setRecipientName(shippingAddress.getRecipientName());
+            delivery.setLine1(shippingAddress.getLine1());
+            delivery.setCity(shippingAddress.getCity());
+            delivery.setCountryCode(shippingAddress.getCountryCode());
+            delivery.setPostalCode(shippingAddress.getPostalCode());
+            delivery.setState(shippingAddress.getState());
+            delivery.setEmail(payment.getPayer().getPayerInfo().getEmail());
+            delivery.setStatus("Pending");
 
-                return ResponseEntity.status(HttpStatus.OK).body("Payment successful, order created");
-            // }
-    //     } catch (PayPalRESTException e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Payment failed: " + e.getMessage());
-    //     }
+            deliveryRepository.save(delivery);
 
-    //     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Payment not approved");
+            return ResponseEntity.ok("Payment Success");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment Failed");
     }
+
 }

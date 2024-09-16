@@ -18,14 +18,8 @@ public class PaypalService {
     @Autowired
     private APIContext apiContext;
 
-    public Payment createPayment(
-            Double total,
-            String currency,
-            String method,
-            String intent,
-            String description,
-            String cancelUrl,
-            String successUrl) throws PayPalRESTException {
+    public Payment createPayment(Double total, String currency, String method, String intent,
+                                 String description, String cancelUrl, String successUrl) throws PayPalRESTException {
 
         Amount amount = new Amount();
         amount.setCurrency(currency);

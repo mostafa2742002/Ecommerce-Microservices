@@ -18,12 +18,12 @@ public class PaymentPaypalController {
     private PaymentPaypalService paymentPaypalService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createPaymentIntent(@RequestParam Integer userId, @RequestParam Integer amount) {
+    public ResponseEntity<String> createPaymentIntent(@RequestParam Integer userId, @RequestParam Integer amount) throws PayPalRESTException {
         return paymentPaypalService.createPaymentIntent(userId, amount);
     }
 
     @PostMapping("/success")
-    public ResponseEntity<String> handleSuccess(@RequestParam String paymentId, @RequestParam String payerId) throws PayPalRESTException {
+    public ResponseEntity<String> handleSuccess(@RequestParam String paymentId,@RequestParam String token, @RequestParam String payerId) throws PayPalRESTException {
         return paymentPaypalService.handleSuccess(paymentId, payerId);
     }
 }
