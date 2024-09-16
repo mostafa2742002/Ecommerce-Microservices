@@ -1,10 +1,10 @@
-package com.micro.productservice.entity;
+package com.example.cartservice.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.cartservice.dto.CategoryDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.micro.productservice.dto.CategoryDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

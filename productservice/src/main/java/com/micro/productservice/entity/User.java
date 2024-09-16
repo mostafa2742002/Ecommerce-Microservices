@@ -1,4 +1,4 @@
-package com.micro.orderservice.entity;
+package com.micro.productservice.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.micro.orderservice.dto.UserDTO;
+import com.micro.productservice.dto.UserDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

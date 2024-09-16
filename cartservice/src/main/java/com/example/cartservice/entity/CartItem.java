@@ -2,10 +2,14 @@ package com.example.cartservice.entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -17,8 +21,10 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String productId;
-    private Integer quantity;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+    private Long quantity;
     private BigDecimal price;
 
     // Getters and setters

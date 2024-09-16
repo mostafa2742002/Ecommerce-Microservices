@@ -1,4 +1,4 @@
-package com.micro.userservice.entity;
+package com.micro.productservice.entity;
 
 import java.math.BigDecimal;
 

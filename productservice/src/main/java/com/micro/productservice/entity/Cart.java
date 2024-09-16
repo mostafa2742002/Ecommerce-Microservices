@@ -1,31 +1,39 @@
-package com.micro.userservice.entity;
+package com.micro.productservice.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "cart_items")
-public class CartItem {
+@Table(name = "carts")
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-    private Long quantity;
-    private BigDecimal price;
+    @JoinColumn(name = "user_id")
+    @JsonBackReference // Prevent infinite recursion
+    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> items = new ArrayList<>();
+
+    private BigDecimal totalPrice;
 
     // Getters and setters
 }
