@@ -12,6 +12,7 @@
 	<artifactId>orderservice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>orderservice</name>
+	<packaging>jar</packaging>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -83,6 +84,16 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.3</version>
+				<configuration>
+				<to>
+					<image>sasa274/ecommerce-orderservice:v1</image>
+				</to>
 				</configuration>
 			</plugin>
 		</plugins>
