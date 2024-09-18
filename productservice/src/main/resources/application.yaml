@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: productservice
+  datasource:
+    url: jdbc:mysql://localhost:3307/mydb
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show-sql: true
+server:
+  port: 8083

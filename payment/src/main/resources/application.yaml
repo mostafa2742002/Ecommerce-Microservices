@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: paymentservice
+  datasource:
+    url: jdbc:mysql://localhost:3307/mydb
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show-sql: true
+server:
+  port: 8085
+
+# paypal 
+paypal: 
+  mode: sandbox
+  client:
+    id: AYSq3RDGsmBLJE-otTkBtM-jBRd1TCQwFf9RGfwddNXWz0uFU9ztymylOhRS
+    secret: EGnHDxD_qRPdaLdZz8iCr8N7_MzF-YHPTkjs6NKYQvQSBngp4PTTVWkPZRbL
