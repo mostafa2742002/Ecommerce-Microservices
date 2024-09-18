@@ -1,0 +1,92 @@
+# userservice 8080
+# cartservice 8081
+# orderservice 8082
+# productservice 8083
+# inventoryservice 8084
+# paymentservice 8085
+
+services:
+  userservice:
+    image: "sasa274/ecommerce-userservice:v1"
+    container_name: "e-userservice"
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - ecommerce
+
+  cartservice:
+    image: "sasa274/ecommerce-cartservice:v1"
+    container_name: "e-cartservice"
+    ports:
+      - "8081:8081"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - ecommerce
+  
+  orderservice:
+    image: "sasa274/ecommerce-orderservice:v1"
+    container_name: "e-orderservice"
+    ports:
+      - "8082:8082"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - ecommerce
+
+  productservice:
+    image: "sasa274/ecommerce-productservice:v1"
+    container_name: "e-productservice"
+    ports:
+      - "8083:8083"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - ecommerce
+  
+  inventoryservice:
+    image: "sasa274/ecommerce-inventoryservice:v1"
+    container_name: "e-inventoryservice"
+    ports:
+      - "8084:8084"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - ecommerce
+  
+  paymentservice:
+    image: "sasa274/ecommerce-paymentservice:v1"
+    container_name: "e-paymentservice"
+    ports:
+      - "8085:8085"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - ecommerce
+  # mysql:
+  #   image: mysql:latest
+  #   container_name: "e-mysql"
+  #   ports:
+  #     - "3307:3306"
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: mydb
+
+
+networks:
+  ecommerce:
+    driver: bridge
