@@ -1,7 +1,7 @@
 build:
   version: "2.0"
 
-payment:
+paymentservice:
   message: "Welcome to Ecommerce Payment Service related prod APIs"
   contactDetails:
     name: "Mostafa - Developer"

@@ -1,7 +1,7 @@
 build:
   version: "2.0"
 
-user:
+userservice:
   message: "Welcome to Ecommerce User Service related prod APIs"
   contactDetails:
     name: "Mostafa - Developer"

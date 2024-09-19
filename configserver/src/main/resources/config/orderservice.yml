@@ -1,7 +1,7 @@
 build:
   version: "1.0"
 
-order:
+orderservice:
   message: "Welcome to Ecommerce Order Service related local APIs"
   contactDetails:
     name: "Mostafa - Developer"

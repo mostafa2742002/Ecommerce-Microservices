@@ -2,6 +2,7 @@ package com.micro.userservice.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.micro.userservice.dto.UserContactInfoDto;
 import com.micro.userservice.dto.UserDTO;
 import com.micro.userservice.entity.User;
+import com.micro.userservice.exceptions.ErrorResponseDto;
 import com.micro.userservice.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -32,6 +36,7 @@ import lombok.AllArgsConstructor;
 public class UserController {
 
     private final UserService userService;
+    private final UserContactInfoDto userContactInfoDto;
 
     @Operation(summary = "Sign up a new user", description = "Creates a new user in the system.")
     @ApiResponses(value = {
@@ -71,5 +76,32 @@ public class UserController {
         userService.updateUser(user);
         return ResponseEntity.ok("User updated successfully");
     }
+
+        @Operation(
+            summary = "Get Contact Info",
+            description = "Contact Info details that can be reached out in case of any issues"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<UserContactInfoDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userContactInfoDto);
+    }
+
+
 
 }

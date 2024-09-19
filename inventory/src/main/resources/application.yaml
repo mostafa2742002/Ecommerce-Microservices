@@ -1,6 +1,8 @@
 spring:
   application:
-    name: inventoryservice
+    name: "inventoryservice"
+  profiles:
+    active: "default"
   datasource:
     url: jdbc:mysql://localhost:3307/mydb
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -13,5 +15,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         show-sql: true
+  config:
+    import: "optional:configserver:http://localhost:8071/"
 server:
   port: 8084

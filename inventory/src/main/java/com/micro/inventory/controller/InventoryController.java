@@ -3,7 +3,6 @@ package com.micro.inventory.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.micro.inventory.dto.InventoryContactInfoDto;
 import com.micro.inventory.dto.InventoryDTO;
 import com.micro.inventory.entity.Inventory;
 import com.micro.inventory.entity.Product;
+import com.micro.inventory.exceptions.ErrorResponseDto;
 import com.micro.inventory.service.InventoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,14 +28,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 
 @RestController
 @Validated
+@AllArgsConstructor
 @RequestMapping("/api/inventory")
 public class InventoryController {
 
-    @Autowired
-    private InventoryService inventoryService;
+    private final InventoryService inventoryService;
+    private final InventoryContactInfoDto inventoryContactInfoDto;
+
 
     @Operation(summary = "Create or update inventory", description = "Create a new inventory record or update an existing one for a product")
     @ApiResponses(value = {
@@ -97,4 +101,17 @@ public class InventoryController {
         inventoryService.deleteInventory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @Operation(summary = "Get Contact Info", description = "Contact Info details that can be reached out in case of any issues")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
+            @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @GetMapping("/contact-info")
+    public ResponseEntity<InventoryContactInfoDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(inventoryContactInfoDto);
+    }
+
 }

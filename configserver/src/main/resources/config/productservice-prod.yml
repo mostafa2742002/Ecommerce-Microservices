@@ -1,7 +1,7 @@
 build:
   version: "2.0"
 
-product:
+productservice:
   message: "Welcome to Ecommerce Product Service related prod APIs"
   contactDetails:
     name: "Mostafa - Developer"
