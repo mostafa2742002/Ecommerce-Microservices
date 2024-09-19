@@ -6,6 +6,23 @@
 # paymentservice 8085
 
 services:
+  ecommercedb:
+    container_name: "e-commercedb"
+    image: mysql:latest
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: mydb
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+      start_period: 10s
+    networks:
+      - ecommerce
+
   userservice:
     image: "sasa274/ecommerce-userservice:v1"
     container_name: "e-userservice"
@@ -17,6 +34,13 @@ services:
           memory: 700m
     networks:
       - ecommerce
+    depends_on:
+      ecommercedb:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
 
   cartservice:
     image: "sasa274/ecommerce-cartservice:v1"
@@ -29,7 +53,14 @@ services:
           memory: 700m
     networks:
       - ecommerce
-  
+    depends_on:
+      ecommercedb:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+
   orderservice:
     image: "sasa274/ecommerce-orderservice:v1"
     container_name: "e-orderservice"
@@ -41,6 +72,13 @@ services:
           memory: 700m
     networks:
       - ecommerce
+    depends_on:
+      ecommercedb:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
 
   productservice:
     image: "sasa274/ecommerce-productservice:v1"
@@ -53,7 +91,14 @@ services:
           memory: 700m
     networks:
       - ecommerce
-  
+    depends_on:
+      ecommercedb:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+
   inventoryservice:
     image: "sasa274/ecommerce-inventoryservice:v1"
     container_name: "e-inventoryservice"
@@ -65,7 +110,14 @@ services:
           memory: 700m
     networks:
       - ecommerce
-  
+    depends_on:
+      ecommercedb:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+
   paymentservice:
     image: "sasa274/ecommerce-paymentservice:v1"
     container_name: "e-paymentservice"
@@ -77,15 +129,13 @@ services:
           memory: 700m
     networks:
       - ecommerce
-  # mysql:
-  #   image: mysql:latest
-  #   container_name: "e-mysql"
-  #   ports:
-  #     - "3307:3306"
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_DATABASE: mydb
-
+    depends_on:
+      ecommercedb:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
 
 networks:
   ecommerce:
