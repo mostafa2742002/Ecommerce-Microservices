@@ -1,0 +1,10 @@
+build:
+  version: "1.0"
+
+order:
+  message: "Welcome to Ecommerce Order Service related local APIs"
+  contactDetails:
+    name: "Mostafa - Developer"
+    email: "orderlocal@ecommerce.com"
+  onCallSupport:
+    - (+20) 01555331990

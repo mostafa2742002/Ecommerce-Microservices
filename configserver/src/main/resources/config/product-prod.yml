@@ -1,0 +1,10 @@
+build:
+  version: "2.0"
+
+product:
+  message: "Welcome to Ecommerce Product Service related prod APIs"
+  contactDetails:
+    name: "Mostafa - Developer"
+    email: "productprod@ecommerce.com"
+  onCallSupport:
+    - (+20) 01555331990

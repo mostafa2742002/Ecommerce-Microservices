@@ -1,0 +1,10 @@
+build:
+  version: "2.0"
+
+payment:
+  message: "Welcome to Ecommerce Payment Service related prod APIs"
+  contactDetails:
+    name: "Mostafa - Developer"
+    email: "paymentprod@ecommerce.com"
+  onCallSupport:
+    - (+20) 01555331990

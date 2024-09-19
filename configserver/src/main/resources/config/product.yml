@@ -1,0 +1,10 @@
+build:
+  version: "1.0"
+
+product:
+  message: "Welcome to Ecommerce Product Service related local APIs"
+  contactDetails:
+    name: "Mostafa - Developer"
+    email: "productlocal@ecommerce.com"
+  onCallSupport:
+    - (+20) 01555331990

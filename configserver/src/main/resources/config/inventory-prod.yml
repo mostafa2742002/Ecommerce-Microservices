@@ -1,0 +1,10 @@
+build:
+  version: "2.0"
+
+inventory:
+  message: "Welcome to Ecommerce Inventory Service related prod APIs"
+  contactDetails:
+    name: "Mostafa - Developer"
+    email: "inventoryprod@ecommerce.com"
+  onCallSupport:
+    - (+20) 01555331990

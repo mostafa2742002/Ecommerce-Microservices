@@ -1,0 +1,10 @@
+build:
+  version: "2.0"
+
+cart:
+  message: "Welcome to Ecommerce Cart Service related prod APIs "
+  contactDetails:
+    name: "Mostafa - Developer"
+    email: "cartprod@ecommerce.com"
+  onCallSupport:
+    - (+20) 01555331990

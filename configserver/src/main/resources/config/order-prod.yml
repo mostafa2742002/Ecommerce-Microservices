@@ -1,0 +1,10 @@
+build:
+  version: "2.0"
+
+order:
+  message: "Welcome to Ecommerce Order Service related prod APIs"
+  contactDetails:
+    name: "Mostafa - Developer"
+    email: "orderprod@ecommerce.com"
+  onCallSupport:
+    - (+20) 01555331990

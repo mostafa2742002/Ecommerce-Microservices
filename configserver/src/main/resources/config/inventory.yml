@@ -1,0 +1,10 @@
+build:
+  version: "1.0"
+
+inventory:
+  message: "Welcome to Ecommerce Inventory Service related local APIs"
+  contactDetails:
+    name: "Mostafa - Developer"
+    email: "inventorylocal@ecommerce.com"
+  onCallSupport:
+    - (+20) 01555331990

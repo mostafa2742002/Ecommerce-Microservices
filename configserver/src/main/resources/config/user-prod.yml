@@ -1,0 +1,10 @@
+build:
+  version: "2.0"
+
+user:
+  message: "Welcome to Ecommerce User Service related prod APIs"
+  contactDetails:
+    name: "Mostafa - Developer"
+    email: "userprod@ecommerce.com"
+  onCallSupport:
+    - (+20) 01555331990

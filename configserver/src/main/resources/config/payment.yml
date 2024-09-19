@@ -1,0 +1,10 @@
+build:
+  version: "1.0"
+
+payment:
+  message: "Welcome to Ecommerce Payment Service related local APIs"
+  contactDetails:
+    name: "Mostafa - Developer"
+    email: "paymentlocal@ecommerce.com"
+  onCallSupport:
+    - (+20) 01555331990
