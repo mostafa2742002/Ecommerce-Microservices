@@ -2,11 +2,20 @@ spring:
   application:
     name: "configserver"
   profiles:
-    active: native
+    # active: native
+    active: git
   cloud:
     config:
-      server:
-        native:
-          searchLocations: "classpath:/config"
+      serv
+        # native:
+          # searchLocations: "classpath:/config"
+        git:
+          uri: "https://github.com/mostafa2742002/Ecommerce-Microservices-config.git"
+          default-label: "main"
+          timeout: 5
+          clone-on-start: true
+          force-pull: true
+
+
 server:
   port: 8071
