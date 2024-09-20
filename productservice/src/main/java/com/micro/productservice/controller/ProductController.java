@@ -32,7 +32,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @Validated
 @AllArgsConstructor
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;

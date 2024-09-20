@@ -6,7 +6,7 @@ spring:
     active: git
   cloud:
     config:
-      serv
+      server:
         # native:
           # searchLocations: "classpath:/config"
         git:
