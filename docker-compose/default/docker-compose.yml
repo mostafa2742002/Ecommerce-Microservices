@@ -23,8 +23,21 @@ services:
     networks:
       - ecommerce
 
+  configservice:
+    image: "sasa274/ecommerce-configservice:v2"
+    container_name: "e-configservice"
+    ports:
+      - "8071:8071"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - ecommerce
+
+
   userservice:
-    image: "sasa274/ecommerce-userservice:v1"
+    image: "sasa274/ecommerce-userservice:v2"
     container_name: "e-userservice"
     ports:
       - "8080:8080"
@@ -41,9 +54,12 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "root"
+      SPRING_APPLICATION_NAME: "userservice"
+      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
+      SPRING_PROFILES_ACTIVE: default
 
   cartservice:
-    image: "sasa274/ecommerce-cartservice:v1"
+    image: "sasa274/ecommerce-cartservice:v2"
     container_name: "e-cartservice"
     ports:
       - "8081:8081"
@@ -60,9 +76,12 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "root"
+      SPRING_APPLICATION_NAME: "cartservice"
+      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
+      SPRING_PROFILES_ACTIVE: default
 
   orderservice:
-    image: "sasa274/ecommerce-orderservice:v1"
+    image: "sasa274/ecommerce-orderservice:v2"
     container_name: "e-orderservice"
     ports:
       - "8082:8082"
@@ -79,9 +98,12 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "root"
+      SPRING_APPLICATION_NAME: "orderservice"
+      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
+      SPRING_PROFILES_ACTIVE: default
 
   productservice:
-    image: "sasa274/ecommerce-productservice:v1"
+    image: "sasa274/ecommerce-productservice:v2"
     container_name: "e-productservice"
     ports:
       - "8083:8083"
@@ -98,9 +120,13 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "root"
+      SPRING_APPLICATION_NAME: "productservice"
+      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
+      SPRING_PROFILES_ACTIVE: default
+
 
   inventoryservice:
-    image: "sasa274/ecommerce-inventoryservice:v1"
+    image: "sasa274/ecommerce-inventoryservice:v2"
     container_name: "e-inventoryservice"
     ports:
       - "8084:8084"
@@ -117,9 +143,12 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "root"
+      SPRING_APPLICATION_NAME: "inventoryservice"
+      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
+      SPRING_PROFILES_ACTIVE: default
 
   paymentservice:
-    image: "sasa274/ecommerce-paymentservice:v1"
+    image: "sasa274/ecommerce-paymentservice:v2"
     container_name: "e-paymentservice"
     ports:
       - "8085:8085"
@@ -136,6 +165,9 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "root"
+      SPRING_APPLICATION_NAME: "paymentservice"
+      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
+      SPRING_PROFILES_ACTIVE: default
 
 networks:
   ecommerce:
