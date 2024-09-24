@@ -67,7 +67,7 @@ services:
     depends_on:
       ecommercedb:
         condition: service_healthy
-      configserver:
+      configservice:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "userservice"
@@ -84,7 +84,7 @@ services:
     depends_on:
       ecommercedb:
         condition: service_healthy
-      configserver:
+      configservice:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "cartservice"
@@ -100,7 +100,7 @@ services:
     depends_on:
       ecommercedb:
         condition: service_healthy
-      configserver:
+      configservice:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "orderservice"
@@ -116,7 +116,7 @@ services:
     depends_on:
       ecommercedb:
         condition: service_healthy
-      configserver:
+      configservice:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "productservice"
@@ -130,7 +130,7 @@ services:
     depends_on:
       ecommercedb:
         condition: service_healthy
-      configserver:
+      configservice:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "inventoryservice"
@@ -146,7 +146,7 @@ services:
     depends_on:
       ecommercedb:
         condition: service_healthy
-      configserver:
+      configservice:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "paymentservice"
