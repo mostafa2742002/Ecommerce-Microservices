@@ -23,11 +23,35 @@ services:
     networks:
       - ecommerce
 
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    hostname: rabbitmq
+    ports:
+    - 5672:5672
+    - 15672:15672
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    networks:
+      - ecommerce
+
   configservice:
     image: "sasa274/ecommerce-configservice:v2"
     container_name: "e-configservice"
     ports:
       - "8071:8071"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --slient localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     deploy:
       resources:
         limits:
@@ -49,6 +73,8 @@ services:
       - ecommerce
     depends_on:
       ecommercedb:
+        condition: service_healthy
+      configserver:
         condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
@@ -72,6 +98,8 @@ services:
     depends_on:
       ecommercedb:
         condition: service_healthy
+      configserver:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
       SPRING_DATASOURCE_USERNAME: "root"
@@ -94,6 +122,8 @@ services:
     depends_on:
       ecommercedb:
         condition: service_healthy
+      configserver:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
       SPRING_DATASOURCE_USERNAME: "root"
@@ -115,6 +145,8 @@ services:
       - ecommerce
     depends_on:
       ecommercedb:
+        condition: service_healthy
+      configserver:
         condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
@@ -139,6 +171,8 @@ services:
     depends_on:
       ecommercedb:
         condition: service_healthy
+      configserver:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
       SPRING_DATASOURCE_USERNAME: "root"
@@ -160,6 +194,8 @@ services:
       - ecommerce
     depends_on:
       ecommercedb:
+        condition: service_healthy
+      configserver:
         condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
