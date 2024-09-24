@@ -25,7 +25,7 @@ services:
       service: network-deploy-service
 
   rabbitmq:
-    image: rabbitmq:3.12-management
+    image: rabbitmq:3.13-management
     hostname: rabbitmq
     ports:
     - 5672:5672
