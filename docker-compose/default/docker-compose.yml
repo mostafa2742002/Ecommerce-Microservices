@@ -20,8 +20,9 @@ services:
       retries: 10
       interval: 10s
       start_period: 10s
-    networks:
-      - ecommerce
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
 
   rabbitmq:
     image: rabbitmq:3.12-management
@@ -35,8 +36,9 @@ services:
       timeout: 5s
       retries: 10
       start_period: 5s
-    networks:
-      - ecommerce
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
 
   configservice:
     image: "sasa274/ecommerce-configservice:v2"
@@ -52,12 +54,9 @@ services:
       timeout: 5s
       retries: 10
       start_period: 10s
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - ecommerce
+    extends: 
+      file: common-config.yml
+      service: microservice-base-config 
 
 
   userservice:
@@ -65,96 +64,62 @@ services:
     container_name: "e-userservice"
     ports:
       - "8080:8080"
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - ecommerce
     depends_on:
       ecommercedb:
         condition: service_healthy
       configserver:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "root"
       SPRING_APPLICATION_NAME: "userservice"
-      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
-      SPRING_PROFILES_ACTIVE: default
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+      
 
   cartservice:
     image: "sasa274/ecommerce-cartservice:v2"
     container_name: "e-cartservice"
     ports:
       - "8081:8081"
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - ecommerce
     depends_on:
       ecommercedb:
         condition: service_healthy
       configserver:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "root"
       SPRING_APPLICATION_NAME: "cartservice"
-      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
-      SPRING_PROFILES_ACTIVE: default
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
 
   orderservice:
     image: "sasa274/ecommerce-orderservice:v2"
     container_name: "e-orderservice"
     ports:
       - "8082:8082"
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - ecommerce
     depends_on:
       ecommercedb:
         condition: service_healthy
       configserver:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "root"
       SPRING_APPLICATION_NAME: "orderservice"
-      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
-      SPRING_PROFILES_ACTIVE: default
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
 
   productservice:
     image: "sasa274/ecommerce-productservice:v2"
     container_name: "e-productservice"
     ports:
       - "8083:8083"
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - ecommerce
     depends_on:
       ecommercedb:
         condition: service_healthy
       configserver:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "root"
       SPRING_APPLICATION_NAME: "productservice"
-      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
-      SPRING_PROFILES_ACTIVE: default
 
 
   inventoryservice:
@@ -162,48 +127,32 @@ services:
     container_name: "e-inventoryservice"
     ports:
       - "8084:8084"
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - ecommerce
     depends_on:
       ecommercedb:
         condition: service_healthy
       configserver:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "root"
       SPRING_APPLICATION_NAME: "inventoryservice"
-      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
-      SPRING_PROFILES_ACTIVE: default
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
 
   paymentservice:
     image: "sasa274/ecommerce-paymentservice:v2"
     container_name: "e-paymentservice"
     ports:
       - "8085:8085"
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - ecommerce
     depends_on:
       ecommercedb:
         condition: service_healthy
       configserver:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "root"
       SPRING_APPLICATION_NAME: "paymentservice"
-      SPRING_CONFIG_IMPORT: "configserver:http://configservice:8071/"
-      SPRING_PROFILES_ACTIVE: default
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
 
 networks:
   ecommerce:
