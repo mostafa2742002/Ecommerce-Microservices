@@ -1,7 +1,7 @@
 services:
   network-deploy-service:
     networks:
-      - eazybank
+      - ecommerce
 
   microservice-base-config:
     extends:
