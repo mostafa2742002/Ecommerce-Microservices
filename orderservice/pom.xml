@@ -117,7 +117,7 @@
 				<version>3.4.3</version>
 				<configuration>
 				<to>
-					<image>sasa274/ecommerce-orderservice:v1</image>
+					<image>sasa274/ecommerce-orderservice:v2</image>
 				</to>
 				</configuration>
 			</plugin>

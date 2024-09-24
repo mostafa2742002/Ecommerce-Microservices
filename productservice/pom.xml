@@ -116,13 +116,13 @@
 					</excludes>
 				</configuration>
 			</plugin>
-						<plugin>
+			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>3.4.3</version>
 				<configuration>
 				<to>
-					<image>sasa274/ecommerce-productservice:v1</image>
+					<image>sasa274/ecommerce-productservice:v2</image>
 				</to>
 				</configuration>
 			</plugin>
