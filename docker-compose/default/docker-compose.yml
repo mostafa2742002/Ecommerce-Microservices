@@ -14,15 +14,15 @@ services:
     environment:
       MYSQL_DATABASE: mydb
       MYSQL_ROOT_PASSWORD: root
+      SPRING_RABBITMQ_HOST: "rabbit"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 10s
       retries: 10
       interval: 10s
       start_period: 10s
-    extends:
-      file: common-config.yml
-      service: network-deploy-service
+    networks:
+      - ecommerce
 
   rabbitmq:
     image: rabbitmq:3.13-management
@@ -36,15 +36,18 @@ services:
       timeout: 5s
       retries: 10
       start_period: 5s
-    extends:
-      file: common-config.yml
-      service: network-deploy-service
+    networks:
+      - ecommerce
 
   configservice:
     image: "sasa274/ecommerce-configservice:v2"
     container_name: "e-configservice"
     ports:
       - "8071:8071"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -54,9 +57,10 @@ services:
       timeout: 5s
       retries: 10
       start_period: 10s
-    extends: 
-      file: common-config.yml
-      service: microservice-base-config 
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbit"
+    networks:
+      - ecommerce 
 
 
   userservice:
@@ -64,6 +68,10 @@ services:
     container_name: "e-userservice"
     ports:
       - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
     depends_on:
       ecommercedb:
         condition: service_healthy
@@ -71,9 +79,14 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "userservice"
-    extends:
-      file: common-config.yml
-      service: microservice-configserver-config
+      SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    networks:
+      - ecommerce
       
 
   cartservice:
@@ -81,6 +94,10 @@ services:
     container_name: "e-cartservice"
     ports:
       - "8081:8081"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
     depends_on:
       ecommercedb:
         condition: service_healthy
@@ -88,15 +105,24 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "cartservice"
-    extends:
-      file: common-config.yml
-      service: microservice-configserver-config
+      SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    networks:
+      - ecommerce
 
   orderservice:
     image: "sasa274/ecommerce-orderservice:v2"
     container_name: "e-orderservice"
     ports:
       - "8082:8082"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
     depends_on:
       ecommercedb:
         condition: service_healthy
@@ -104,15 +130,24 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "orderservice"
-    extends:
-      file: common-config.yml
-      service: microservice-configserver-config
+      SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    networks:
+      - ecommerce
 
   productservice:
     image: "sasa274/ecommerce-productservice:v2"
     container_name: "e-productservice"
     ports:
       - "8083:8083"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
     depends_on:
       ecommercedb:
         condition: service_healthy
@@ -120,6 +155,14 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "productservice"
+      SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    networks:
+      - ecommerce
 
 
   inventoryservice:
@@ -127,6 +170,10 @@ services:
     container_name: "e-inventoryservice"
     ports:
       - "8084:8084"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
     depends_on:
       ecommercedb:
         condition: service_healthy
@@ -134,15 +181,24 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "inventoryservice"
-    extends:
-      file: common-config.yml
-      service: microservice-configserver-config
+      SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    networks:
+      - ecommerce
 
   paymentservice:
     image: "sasa274/ecommerce-paymentservice:v2"
     container_name: "e-paymentservice"
     ports:
       - "8085:8085"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
     depends_on:
       ecommercedb:
         condition: service_healthy
@@ -150,9 +206,14 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "paymentservice"
-    extends:
-      file: common-config.yml
-      service: microservice-configserver-config
+      SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    networks:
+      - ecommerce
 
 networks:
   ecommerce:
