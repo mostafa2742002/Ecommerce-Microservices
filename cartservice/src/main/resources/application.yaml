@@ -22,13 +22,36 @@ spring:
   #   port: 5672
   #   username: guest
   #   password: guest
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
 
+info:
+  app:
+    name: "cartservice"
+    description: "Cart Service"
+    version: "1.0.0"
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+endpoints:
+  shutdown:
+    enabled: true
 
 server:
   port: 8081
