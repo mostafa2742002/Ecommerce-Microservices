@@ -126,7 +126,7 @@
 				<version>3.4.3</version>
 				<configuration>
 				<to>
-					<image>sasa274/ecommerce-inventoryservice:v2</image>
+					<image>sasa274/ecommerce-inventoryservice:v3</image>
 				</to>
 				</configuration>
 			</plugin>
