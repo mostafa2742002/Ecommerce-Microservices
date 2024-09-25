@@ -22,7 +22,7 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-    private Long quantity;
+    private Integer quantity;
     private BigDecimal price;
 
     // Getters and setters

@@ -114,4 +114,9 @@ public class InventoryController {
                 .body(inventoryContactInfoDto);
     }
 
+    @GetMapping("/inventory/{productId}/check?quantity={quantity}")
+    public Boolean checkInventory(@PathVariable Integer productId, @PathVariable Integer quantity) {
+        return inventoryService.checkInventory(productId, quantity);
+    }
+
 }

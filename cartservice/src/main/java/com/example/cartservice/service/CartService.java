@@ -11,7 +11,7 @@ import com.example.cartservice.entity.User;
 import com.example.cartservice.exceptions.ResourceNotFoundException;
 import com.example.cartservice.repo.CartRepository;
 import com.example.cartservice.repo.UserRepository;
-
+import com.example.cartservice.client.Inventoryfeignclient;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -20,6 +20,7 @@ public class CartService {
 
     private CartRepository cartRepository;
     private UserRepository userRepository;
+    private Inventoryfeignclient inventoryfeignclient;
 
     public Cart createCart(Integer userId) {
         Cart cart = new Cart();
@@ -52,6 +53,11 @@ public class CartService {
     public Cart addItemToCart(Integer cartId, CartItem item) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
+        
+        Boolean isFound = inventoryfeignclient.checkInventory(item.getProduct().getId(), item.getQuantity());
+        if (!isFound) {
+            throw new ResourceNotFoundException("Product", "productId", item.getProduct().getId());
+        }
         cart.getItems().add(item);
         updateTotalPrice(cart);
         return cartRepository.save(cart);

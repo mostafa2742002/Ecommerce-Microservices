@@ -12,4 +12,6 @@ import com.micro.inventory.entity.Product;
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 
     Optional<Inventory> findByProduct(Product product);
+
+    Optional<Inventory> findByProductId(Integer productId);
 }

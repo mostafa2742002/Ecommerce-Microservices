@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.micro.payment.paypal.entity.PaypalOrder;
 
 @Repository
-public interface OrderRepository extends JpaRepository<PaypalOrder, Long> {
+public interface PaypalOrderRepository extends JpaRepository<PaypalOrder, Long> {
 }

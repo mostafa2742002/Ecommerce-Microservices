@@ -61,4 +61,8 @@ public class ProductService {
 
         productRepository.deleteById(id);
     }
+
+    public Boolean checkProduct(Integer id) {
+        return productRepository.existsById(id);
+    }
 }

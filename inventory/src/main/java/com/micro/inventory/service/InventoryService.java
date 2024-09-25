@@ -6,18 +6,27 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.micro.inventory.client.ProductFeignClient;
 import com.micro.inventory.entity.Inventory;
 import com.micro.inventory.entity.Product;
 import com.micro.inventory.repo.InventoryRepository;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class InventoryService {
 
-    @Autowired
     private InventoryRepository inventoryRepository;
+    private ProductFeignClient productFeignClient;
 
     public Inventory createOrUpdateInventory(Product product, Long stockQuantity) {
         Optional<Inventory> inventoryOpt = inventoryRepository.findByProduct(product);
+
+        Boolean isProductFound = productFeignClient.checkProduct(product.getId());
+        if (!isProductFound) {
+            throw new RuntimeException("Product not found");
+        }
 
         Inventory inventory;
         if (inventoryOpt.isPresent()) {
@@ -55,5 +64,14 @@ public class InventoryService {
 
     public void deleteInventory(Integer id) {
         inventoryRepository.deleteById(id);
+    }
+
+    public Boolean checkInventory(Integer productId, Integer quantity) {
+        Optional<Inventory> inventoryOpt = inventoryRepository.findByProductId(productId);
+        if (inventoryOpt.isPresent()) {
+            Inventory inventory = inventoryOpt.get();
+            return inventory.getStockQuantity() >= quantity;
+        }
+        return false;
     }
 }
