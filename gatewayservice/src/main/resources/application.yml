@@ -8,7 +8,7 @@ spring:
       discovery:
         locator:
           enabled: true
-        #   lower-case-service-id: true
+          lower-case-service-id: true
   # rabbitmq:
   #   host: localhost
   #   port: 5672

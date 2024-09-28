@@ -81,6 +81,16 @@
             "projectName": "inventory",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-GatewayserviceApplication<gatewayservice>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.micro.gatewayservice.GatewayserviceApplication",
+            "projectName": "gatewayservice",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
