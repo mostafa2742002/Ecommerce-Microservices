@@ -43,9 +43,19 @@ management:
     web:
       exposure:
         include: "*"
+  health:
+    readiness:
+      enabled: true
+    liveness:
+      enabled: true
+
   endpoint:
     shutdown:
       enabled: true
+    health:
+      probes:
+        enabled: true
+
   info:
     env:
       enabled: true
@@ -53,13 +63,12 @@ management:
 endpoints:
   shutdown:
     enabled: true
-
-
+    
 server:
   port: 8085
 
-# paypal 
-paypal: 
+# paypal
+paypal:
   mode: sandbox
   client:
     id: AYSq3RDGsmBLJE-otTkBtM-jBRd1TCQwFf9RGfwddNXWz0uFU9ztymylOhRS
