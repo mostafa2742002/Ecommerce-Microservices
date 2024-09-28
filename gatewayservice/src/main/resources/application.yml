@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: "gatewayservice"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+        #   lower-case-service-id: true
+  # rabbitmq:
+  #   host: localhost
+  #   port: 5672
+  #   username: guest
+  #   password: guest
+
+info:
+  app:
+    name: "gatewayservice"
+    description: "Gateway Service"
+    version: "1.0.0"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+  info:
+    env:
+      enabled: true
