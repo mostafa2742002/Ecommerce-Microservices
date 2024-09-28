@@ -128,7 +128,7 @@
 				<version>3.4.3</version>
 				<configuration>
 				<to>
-					<image>sasa274/ecommerce-paymentservice:v3</image>
+					<image>sasa274/ecommerce-paymentservice:v4</image>
 				</to>
 				</configuration>
 			</plugin>

@@ -133,7 +133,7 @@
 				<version>3.4.3</version>
 				<configuration>
 				<to>
-					<image>sasa274/ecommerce-cartservice:v3</image>
+					<image>sasa274/ecommerce-cartservice:v4</image>
 				</to>
 				</configuration>
 			</plugin>

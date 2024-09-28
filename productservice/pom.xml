@@ -131,7 +131,7 @@
 				<version>3.4.3</version>
 				<configuration>
 				<to>
-					<image>sasa274/ecommerce-productservice:v3</image>
+					<image>sasa274/ecommerce-productservice:v4</image>
 				</to>
 				</configuration>
 			</plugin>
