@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.micro.payment.entity.Order;
 import com.micro.payment.entity.OrderToBuy;
+import com.micro.payment.entity.PurchaseOrder;
 import com.micro.payment.paypal.entity.Delivery;
 import com.micro.payment.paypal.entity.PaypalOrder;
 import com.micro.payment.paypal.repo.DeliveryRepository;
@@ -28,7 +28,7 @@ public class PaymentPaypalService {
     private final OrderToBuyRepository orderToBuyRepository;
     private final OrderRepository orderRepository;
 
-    public ResponseEntity<String> createPaymentIntent(Integer userId, Integer amount,Order userOrder) throws PayPalRESTException {
+    public ResponseEntity<String> createPaymentIntent(Integer userId, Integer amount,PurchaseOrder userOrder) throws PayPalRESTException {
 
         if(userRepository.findById(userId).isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
@@ -81,7 +81,7 @@ public class PaymentPaypalService {
             deliveryRepository.save(delivery);
 
             OrderToBuy orderToBuy = orderToBuyRepository.findByOrderId(paymentId);
-            Order order = orderRepository.findById(orderToBuy.getOrder().getId()).get();
+            PurchaseOrder order = orderRepository.findById(orderToBuy.getOrder().getId()).get();
             order.setStatus("Paid");
             orderRepository.save(order);
             orderToBuyRepository.delete(orderToBuy);

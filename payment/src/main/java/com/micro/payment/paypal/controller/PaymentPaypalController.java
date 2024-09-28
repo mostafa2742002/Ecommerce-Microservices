@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.micro.payment.dto.PaymentContactInfoDto;
-import com.micro.payment.entity.Order;
+import com.micro.payment.entity.PurchaseOrder;
 import com.micro.payment.paypal.service.PaymentPaypalService;
 import com.paypal.base.rest.PayPalRESTException;
 
@@ -27,7 +27,7 @@ public class PaymentPaypalController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createPaymentIntent(@RequestParam Integer userId, @RequestParam Integer amount,
-            @RequestBody Order order)
+            @RequestBody PurchaseOrder order)
             throws PayPalRESTException {
         return paymentPaypalService.createPaymentIntent(userId, amount, order);
     }

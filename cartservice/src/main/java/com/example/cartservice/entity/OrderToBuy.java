@@ -1,4 +1,4 @@
-package com.micro.payment.entity;
+package com.example.cartservice.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

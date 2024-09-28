@@ -5,13 +5,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.cartservice.entity.Cart;
-import com.example.cartservice.entity.CartItem;
-import com.example.cartservice.entity.User;
 import com.example.cartservice.exceptions.ResourceNotFoundException;
 import com.example.cartservice.repo.CartRepository;
 import com.example.cartservice.repo.UserRepository;
 import com.example.cartservice.client.Inventoryfeignclient;
+import com.example.cartservice.entity.Cart;
+import com.example.cartservice.entity.CartItem;
+import com.example.cartservice.entity.User;
+
 import lombok.AllArgsConstructor;
 
 @Service
