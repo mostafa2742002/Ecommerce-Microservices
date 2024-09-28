@@ -40,7 +40,7 @@ services:
   #     - ecommerce
 
   configservice:
-    image: "sasa274/ecommerce-configservice:v3"
+    image: "sasa274/ecommerce-configservice:v4"
     container_name: "e-configservice"
     ports:
       - "8071:8071"
@@ -60,10 +60,10 @@ services:
     # environment:
     #   SPRING_RABBITMQ_HOST: "rabbitmq"
     networks:
-      - ecommerce 
+      - ecommerce
 
   eurekaservice:
-    image: "sasa274/ecommerce-eurekaservice:v3"
+    image: "sasa274/ecommerce-eurekaservice:v4"
     container_name: "e-eurekaservice"
     ports:
       - "8070:8070"
@@ -85,14 +85,57 @@ services:
     environment:
       # SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_APPLICATION_NAME: "eurekaservice"
+      SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaservice:8070/eureka/
     networks:
-      - ecommerce 
+      - ecommerce
+
+  gatewayservice:
+    image: "sasa274/ecommerce-gatewayservice:v4"
+    container_name: "e-gatewayservice"
+    ports:
+      - "8072:8072"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    depends_on:
+      configservice:
+        condition: service_healthy
+      eurekaservice:
+        condition: service_healthy
+      userservice:
+        condition: service_healthy
+      cartservice:
+        condition: service_healthy
+      orderservice:
+        condition: service_healthy
+      productservice:
+        condition: service_healthy
+      inventoryservice:
+        condition: service_healthy
+      paymentservice:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "gatewayservice"
+      # SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaservice:8070/eureka/
+    networks:
+      - ecommerce
 
   userservice:
-    image: "sasa274/ecommerce-userservice:v3"
+    image: "sasa274/ecommerce-userservice:v4"
     container_name: "e-userservice"
     ports:
       - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     deploy:
       resources:
         limits:
@@ -113,16 +156,21 @@ services:
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "root"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaservice:8070/eureka/
-      
+
     networks:
       - ecommerce
-      
 
   cartservice:
-    image: "sasa274/ecommerce-cartservice:v3"
+    image: "sasa274/ecommerce-cartservice:v4"
     container_name: "e-cartservice"
     ports:
       - "8081:8081"
+    healthcheck:
+      test: "curl --fail --silent localhost:8081/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     deploy:
       resources:
         limits:
@@ -147,10 +195,16 @@ services:
       - ecommerce
 
   orderservice:
-    image: "sasa274/ecommerce-orderservice:v3"
+    image: "sasa274/ecommerce-orderservice:v4"
     container_name: "e-orderservice"
     ports:
       - "8082:8082"
+    healthcheck:
+      test: "curl --fail --silent localhost:8082/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     deploy:
       resources:
         limits:
@@ -175,10 +229,16 @@ services:
       - ecommerce
 
   productservice:
-    image: "sasa274/ecommerce-productservice:v3"
+    image: "sasa274/ecommerce-productservice:v4"
     container_name: "e-productservice"
     ports:
       - "8083:8083"
+    healthcheck:
+      test: "curl --fail --silent localhost:8083/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     deploy:
       resources:
         limits:
@@ -202,12 +262,17 @@ services:
     networks:
       - ecommerce
 
-
   inventoryservice:
-    image: "sasa274/ecommerce-inventoryservice:v3"
+    image: "sasa274/ecommerce-inventoryservice:v4"
     container_name: "e-inventoryservice"
     ports:
       - "8084:8084"
+    healthcheck:
+      test: "curl --fail --silent localhost:8084/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     deploy:
       resources:
         limits:
@@ -232,10 +297,16 @@ services:
       - ecommerce
 
   paymentservice:
-    image: "sasa274/ecommerce-paymentservice:v3"
+    image: "sasa274/ecommerce-paymentservice:v4"
     container_name: "e-paymentservice"
     ports:
       - "8085:8085"
+    healthcheck:
+      test: "curl --fail --silent localhost:8085/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     deploy:
       resources:
         limits:
