@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "INVENTORYSERVICE")
+@FeignClient(name = "INVENTORYSERVICE", fallback = InventoryFallback.class)
 public interface Inventoryfeignclient {
 
     @GetMapping(value = "/api/inventory/{productId}/check")

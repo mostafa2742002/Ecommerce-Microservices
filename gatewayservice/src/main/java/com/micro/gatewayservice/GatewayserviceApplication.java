@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
+import java.time.Duration;
+
 
 
 @SpringBootApplication
@@ -22,33 +25,51 @@ public class GatewayserviceApplication {
 				.route(p -> p
 					.path("/e-commerce/cartservice/**")
 					.filters(f -> f.rewritePath("/e-commerce/cartservice/(?<segment>.*)", "/${segment}")
-					.circuitBreaker(config -> config.setName("cartcircuitbreaker").setFallbackUri("forward:/fallback/cart")))					
+					.circuitBreaker(config -> config.setName("cartcircuitbreaker").setFallbackUri("forward:/fallback/cart"))
+					.retry(config -> config.setRetries(3).setMethods(HttpMethod.GET)
+					.setBackoff(Duration.ofMillis(100),Duration.ofMillis(200),2,true)))
 					.uri("lb://cartservice"))
+
 				.route(p -> p
 					.path("/e-commerce/inventoryservice/**")
 					.filters(f -> f.rewritePath("/e-commerce/inventoryservice/(?<segment>.*)", "/${segment}")
-					.circuitBreaker(config -> config.setName("inventorycircuitbreaker").setFallbackUri("forward:/fallback/inventory")))
+					.circuitBreaker(config -> config.setName("inventorycircuitbreaker").setFallbackUri("forward:/fallback/inventory"))
+					.retry(config -> config.setRetries(3).setMethods(HttpMethod.GET)
+					.setBackoff(Duration.ofMillis(100),Duration.ofMillis(200),2,true)))
 					.uri("lb://inventoryservice"))
+
 				.route(p -> p 
 					.path("/e-commerce/orderservice/**")
 					.filters(f -> f.rewritePath("/e-commerce/orderservice/(?<segment>.*)", "/${segment}")
-					.circuitBreaker(config -> config.setName("ordercircuitbreaker").setFallbackUri("forward:/fallback/order")))
+					.circuitBreaker(config -> config.setName("ordercircuitbreaker").setFallbackUri("forward:/fallback/order"))
+					.retry(config -> config.setRetries(3).setMethods(HttpMethod.GET)
+					.setBackoff(Duration.ofMillis(100),Duration.ofMillis(200),2,true)))
 					.uri("lb://orderservice"))
+
 				.route(p -> p
 					.path("/e-commerce/paymentservice/**")
 					.filters(f -> f.rewritePath("/e-commerce/paymentservice/(?<segment>.*)", "/${segment}")
-					.circuitBreaker(config -> config.setName("paymentcircuitbreaker").setFallbackUri("forward:/fallback/payment")))
+					.circuitBreaker(config -> config.setName("paymentcircuitbreaker").setFallbackUri("forward:/fallback/payment"))
+					.retry(config -> config.setRetries(3).setMethods(HttpMethod.GET)
+					.setBackoff(Duration.ofMillis(100),Duration.ofMillis(200),2,true)))
 					.uri("lb://paymentservice"))
+
 				.route(p -> p
 					.path("/e-commerce/productservice/**")
 					.filters(f -> f.rewritePath("/e-commerce/productservice/(?<segment>.*)", "/${segment}")
-					.circuitBreaker(config -> config.setName("productcircuitbreaker").setFallbackUri("forward:/fallback/product")))
+					.circuitBreaker(config -> config.setName("productcircuitbreaker").setFallbackUri("forward:/fallback/product"))
+					.retry(config -> config.setRetries(3).setMethods(HttpMethod.GET)
+					.setBackoff(Duration.ofMillis(100),Duration.ofMillis(200),2,true)))
 					.uri("lb://productservice"))
+
 				.route(p -> p
 					.path("/e-commerce/userservice/**")
 					.filters(f -> f.rewritePath("/e-commerce/userservice/(?<segment>.*)", "/${segment}")
-					.circuitBreaker(config -> config.setName("usercircuitbreaker").setFallbackUri("forward:/fallback/user")))
+					.circuitBreaker(config -> config.setName("usercircuitbreaker").setFallbackUri("forward:/fallback/user"))
+					.retry(config -> config.setRetries(3).setMethods(HttpMethod.GET)
+					.setBackoff(Duration.ofMillis(100),Duration.ofMillis(200),2,true)))
 					.uri("lb://userservice"))
+					
 				.build();
 	}
 
