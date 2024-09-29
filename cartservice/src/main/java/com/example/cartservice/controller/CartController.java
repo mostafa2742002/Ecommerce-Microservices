@@ -19,6 +19,7 @@ import com.example.cartservice.entity.CartItem;
 import com.example.cartservice.exceptions.ErrorResponseDto;
 import com.example.cartservice.service.CartService;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,10 +52,15 @@ public class CartController {
             @ApiResponse(responseCode = "200", description = "Cart retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Cart.class))),
             @ApiResponse(responseCode = "404", description = "Cart not found")
     })
+    @Retry(name = "retryService", fallbackMethod = "getCartByIdFallback")
     @GetMapping("/{cartId}")
     public ResponseEntity<Cart> getCartById(@PathVariable Integer cartId) {
         Cart cart = cartService.getCartById(cartId);
         return ResponseEntity.ok(cart);
+    }
+
+    public ResponseEntity<Cart> getCartByIdFallback(Exception e) {
+        return ResponseEntity.ok(new Cart());
     }
 
     @Operation(summary = "Add item to cart", description = "Add a new item to the specified cart")
@@ -96,10 +102,15 @@ public class CartController {
             @ApiResponse(responseCode = "200", description = "Items retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartItem.class))),
             @ApiResponse(responseCode = "404", description = "Cart not found")
     })
+    @Retry(name = "retryService", fallbackMethod = "getAllItemsInCartFallback")
     @GetMapping("/{cartId}/items")
     public ResponseEntity<List<CartItem>> getAllItemsInCart(@PathVariable Integer cartId) {
         List<CartItem> items = cartService.getAllItemsInCart(cartId);
         return ResponseEntity.ok(items);
+    }
+
+    public ResponseEntity<List<CartItem>> getAllItemsInCartFallback(Exception e) {
+        return ResponseEntity.ok(List.of());
     }
 
     @Operation(summary = "Get Contact Info", description = "Contact Info details that can be reached out in case of any issues")
@@ -107,6 +118,7 @@ public class CartController {
             @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
             @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
+    @Retry(name = "retryService", fallbackMethod = "getContactInfoFallback")
     @GetMapping("/contact-info")
     public ResponseEntity<CartContactInfoDto> getContactInfo() {
         return ResponseEntity
@@ -114,4 +126,7 @@ public class CartController {
                 .body(cartContactInfoDto);
     }
 
+    public ResponseEntity<CartContactInfoDto> getContactInfoFallback(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CartContactInfoDto());
+    }
 }
