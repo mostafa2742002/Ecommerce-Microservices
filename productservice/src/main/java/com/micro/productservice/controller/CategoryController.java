@@ -18,6 +18,7 @@ import com.micro.productservice.dto.CategoryDTO;
 import com.micro.productservice.entity.Category;
 import com.micro.productservice.service.CategoryService;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -49,10 +50,15 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Categories retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class)))
     })
+    @Retry(name = "retryService", fallbackMethod = "getAllCategoriesFallback")
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategories() {
         List<Category> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
+    }
+
+    public ResponseEntity<List<Category>> getAllCategoriesFallback(Exception e) {
+        return ResponseEntity.ok(List.of());
     }
 
     @Operation(summary = "Get category by ID", description = "Retrieve a specific category by its ID")
@@ -60,10 +66,15 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Category retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
+    @Retry(name = "retryService", fallbackMethod = "getCategoryByIdFallback")
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable @NotNull Integer id) {
         Category category = categoryService.getCategoryById(id);
         return ResponseEntity.ok(category);
+    }
+
+    public ResponseEntity<Category> getCategoryByIdFallback(Integer id, Exception e) {
+        return ResponseEntity.notFound().build();
     }
 
     @Operation(summary = "Update category by ID", description = "Update an existing category by its ID")

@@ -20,6 +20,7 @@ import com.micro.productservice.entity.Product;
 import com.micro.productservice.exceptions.ErrorResponseDto;
 import com.micro.productservice.service.ProductService;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,10 +54,15 @@ public class ProductController {
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Products retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)))
         })
+        @Retry(name = "retryService", fallbackMethod = "getAllProductsFallback")
         @GetMapping
         public ResponseEntity<List<Product>> getAllProducts() {
                 List<Product> products = productService.getAllProducts();
                 return ResponseEntity.ok(products);
+        }
+
+        public ResponseEntity<List<Product>> getAllProductsFallback(Exception e) {
+                return ResponseEntity.ok(List.of());
         }
 
         @Operation(summary = "Get product by ID", description = "Retrieve a specific product by its ID")
@@ -64,10 +70,15 @@ public class ProductController {
                         @ApiResponse(responseCode = "200", description = "Product retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
                         @ApiResponse(responseCode = "404", description = "Product not found")
         })
+        @Retry(name = "retryService", fallbackMethod = "getProductFallback")
         @GetMapping("/{id}")
         public ResponseEntity<Product> getProductById(@PathVariable @NotNull Integer id) {
                 Product product = productService.getProductById(id);
                 return ResponseEntity.ok(product);
+        }
+
+        public ResponseEntity<Product> getProductFallback(Integer id, Exception e) {
+                return ResponseEntity.ok(new Product());
         }
 
         @Operation(summary = "Update product by ID", description = "Update an existing product by its ID")
@@ -98,6 +109,7 @@ public class ProductController {
                         @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
                         @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
         })
+        @Retry(name = "retryService", fallbackMethod = "getContactInfoFallback")
         @GetMapping("/contact-info")
         public ResponseEntity<ProductContactInfoDto> getContactInfo() {
                 return ResponseEntity
@@ -105,8 +117,23 @@ public class ProductController {
                                 .body(ProductContactInfoDto);
         }
 
+        public ResponseEntity<ProductContactInfoDto> getContactInfoFallback(Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ProductContactInfoDto());
+        }
+
+        @Operation(summary = "Check product availability", description = "Check if a product is available in the system")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Product available"),
+                        @ApiResponse(responseCode = "404", description = "Product not found")
+        })
+        @Retry(name = "retryService", fallbackMethod = "checkProductFallback")
         @GetMapping(value = "/api/product/{id}/check")
         public Boolean checkProduct(@PathVariable Integer id) {
                 return productService.checkProduct(id);
         }
+
+        public Boolean checkProductFallback(Integer id, Exception e) {
+                return false;
+        }
+
 }
