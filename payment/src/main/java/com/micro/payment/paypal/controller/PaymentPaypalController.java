@@ -14,6 +14,7 @@ import com.micro.payment.entity.PurchaseOrder;
 import com.micro.payment.paypal.service.PaymentPaypalService;
 import com.paypal.base.rest.PayPalRESTException;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -21,15 +22,19 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/payment")
 public class PaymentPaypalController {
 
-    
     private final PaymentPaypalService paymentPaypalService;
     private final PaymentContactInfoDto paymentContactInfoDto;
 
+    @Retry(name = "retryService", fallbackMethod = "createPaymentIntentFallback")
     @PostMapping("/create")
     public ResponseEntity<String> createPaymentIntent(@RequestParam Integer userId, @RequestParam Integer amount,
             @RequestBody PurchaseOrder order)
             throws PayPalRESTException {
         return paymentPaypalService.createPaymentIntent(userId, amount, order);
+    }
+
+    public ResponseEntity<String> createPaymentIntentFallback(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Payment creation failed");
     }
 
     @PostMapping("/success")
@@ -38,6 +43,7 @@ public class PaymentPaypalController {
         return paymentPaypalService.handleSuccess(paymentId, payerId);
     }
 
+    @Retry(name = "retryService", fallbackMethod = "handleSuccessFallback")
     @GetMapping("/contact-info")
     public ResponseEntity<PaymentContactInfoDto> getContactInfo() {
         return ResponseEntity
@@ -45,4 +51,7 @@ public class PaymentPaypalController {
                 .body(paymentContactInfoDto);
     }
 
+    public ResponseEntity<PaymentContactInfoDto> handleSuccessFallback(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new PaymentContactInfoDto());
+    }
 }
