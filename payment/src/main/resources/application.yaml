@@ -17,6 +17,10 @@ spring:
         show-sql: true
   config:
     import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    openfeign:
+      circuit:
+        enabled: true
   # rabbitmq:
   #   host: localhost
   #   port: 5672
