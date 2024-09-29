@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.micro.inventory.dto.InventoryContactInfoDto;
@@ -114,8 +115,8 @@ public class InventoryController {
                 .body(inventoryContactInfoDto);
     }
 
-    @GetMapping("/inventory/{productId}/check?quantity={quantity}")
-    public Boolean checkInventory(@PathVariable Integer productId, @PathVariable Integer quantity) {
+    @GetMapping("/{productId}/check")
+    public Boolean checkInventory(@PathVariable Integer productId, @RequestParam Integer quantity) {
         return inventoryService.checkInventory(productId, quantity);
     }
 

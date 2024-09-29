@@ -105,7 +105,7 @@ public class ProductController {
                                 .body(ProductContactInfoDto);
         }
 
-        @GetMapping(value = "/product/{id}/check")
+        @GetMapping(value = "/api/product/{id}/check")
         public Boolean checkProduct(@PathVariable Integer id) {
                 return productService.checkProduct(id);
         }
