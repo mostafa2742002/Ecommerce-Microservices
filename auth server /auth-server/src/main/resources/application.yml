@@ -1,0 +1,62 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3307/mydb
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show-sql: true
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          client-1:
+            registration:
+              client-id: client
+              client-secret: "{noop}asd" # Ensure consistency with Gateway
+              client-authentication-methods:
+                - client_secret_basic
+              authorization-grant-types:
+                - client_credentials
+                - authorization_code
+                - refresh_token
+              redirect-uris:
+                - http://localhost:8072/login/oauth2/code/spring
+              scopes:
+                - user.read
+                - user.write
+                - openid
+            require-authorization-consent: true
+          public-client:
+            registration:
+              client-id: public-client
+              client-authentication-methods:
+                - none
+              authorization-grant-types:
+                - authorization_code
+              redirect-uris:
+                - http://localhost:4200
+              scopes:
+                - openid
+                - profile
+            require-authorization-consent: true
+            require-proof-key: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security:
+          oauth2:
+            authorizationserver: TRACE
+          web:
+            filter:
+              OAuth2AuthorizationFilter: TRACE
+
+server:
+  port: 8097

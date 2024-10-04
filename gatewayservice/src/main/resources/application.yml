@@ -1,6 +1,6 @@
 spring:
   application:
-    name: "gatewayservice"
+    name: gatewayservice
   config:
     import: "optional:configserver:http://localhost:8071/"
   cloud:
@@ -9,15 +9,39 @@ spring:
         locator:
           enabled: false
           lower-case-service-id: true
-  # rabbitmq:
-  #   host: localhost
-  #   port: 5672
-  #   username: guest
-  #   password: guest
+  security:
+    oauth2:
+      client:
+        registration:
+          spring:
+            provider: spring
+            client-id: client
+            client-secret: "{noop}asd" # Added {noop} for consistency
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_basic
+            redirect-uri: "http://localhost:8072/login/oauth2/code/spring"
+            scope:
+              - user.read
+              - openid
+        provider:
+          spring:
+            issuer-uri: http://localhost:8097
+
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8097
+
+logging:
+  level:
+    org:
+      springframework:
+        security:
+          oauth2: TRACE
+          web: TRACE
 
 info:
   app:
-    name: "gatewayservice"
+    name: gatewayservice
     description: "Gateway Service"
     version: "1.0.0"
 
@@ -32,7 +56,6 @@ management:
   info:
     env:
       enabled: true
-
 
 resilience4j:
   circuitbreaker:
