@@ -99,6 +99,12 @@
       		<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
     	</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<dependencyManagement>
