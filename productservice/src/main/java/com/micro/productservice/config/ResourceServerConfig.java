@@ -14,10 +14,11 @@ public class ResourceServerConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().authenticated())
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(Customizer.withDefaults()));
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/actuator/**").permitAll() // Allow public access to actuator endpoints
+                .anyRequest().authenticated()) // All other requests require authentication
+            .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(Customizer.withDefaults()));
         return http.build();
     }
 }
