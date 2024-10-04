@@ -269,15 +269,6 @@ Most services have a memory limit of 700MB to prevent resource exhaustion.
 
 Services are configured to use the Config Service for centralized configuration management. The `SPRING_CONFIG_IMPORT` environment variable is set to point to the Config Service URL.
 
-
-# E-Commerce Microservices Application
-
-[Previous content remains unchanged]
-
-## Configuration Management
-
-This application uses a centralized configuration management approach, leveraging Spring Cloud Config for externalized configuration.
-
 ### Configuration Repository
 
 All configuration files for the microservices are stored in a dedicated GitHub repository:
