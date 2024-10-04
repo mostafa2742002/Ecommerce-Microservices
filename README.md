@@ -169,6 +169,73 @@ For example, to access the user service:
 http://localhost:8072/e-commerce/userservice/users
 ```
 
+## Inter-Service Communication
+
+The microservices in this application communicate with each other using Spring Cloud OpenFeign. This allows for declarative REST client definition and simplifies inter-service calls.
+
+### Feign Clients
+
+Each service that needs to communicate with another service defines a Feign client interface. For example, the Inventory Service communicates with the Product Service using the following Feign client:
+
+```java
+@FeignClient(name = "PRODUCTSERVICE", fallback = ProductFallback.class)
+public interface ProductFeignClient {
+
+    @GetMapping(value = "/api/product/{id}/check", consumes = "application/json")
+    public Boolean checkProduct(Integer id);
+
+}
+```
+
+### Fallback Mechanisms
+
+To ensure resilience in case of service failures, fallback mechanisms are implemented for Feign clients. These fallbacks provide default behavior when the called service is unavailable. For example:
+
+```java
+@Component
+public class ProductFallback implements ProductFeignClient {
+
+    @Override
+    public Boolean checkProduct(Integer id) {
+        return false;
+    }
+
+}
+```
+
+### Retry and Circuit Breaker
+
+In addition to Feign client fallbacks, the services also implement retry mechanisms and circuit breakers for their own endpoints. This is achieved using the `@Retry` annotation from Spring Cloud Circuit Breaker. For example:
+
+```java
+@Retry(name = "retryService", fallbackMethod = "getContactInfoFallback")
+@GetMapping("/contact-info")
+public ResponseEntity<InventoryContactInfoDto> getContactInfo() {
+    // Method implementation
+}
+
+public ResponseEntity<InventoryContactInfoDto> getContactInfoFallback(Exception e) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new InventoryContactInfoDto());
+}
+```
+
+This configuration ensures that if the `getContactInfo` method fails, it will be retried according to the `retryService` configuration. If all retries fail, the `getContactInfoFallback` method will be called.
+
+### API Documentation
+
+The services use Swagger (OpenAPI) for API documentation. Each endpoint is annotated with `@Operation` and `@ApiResponses` to provide clear documentation of the API's functionality and possible response codes.
+
+## Resilience Patterns
+
+The application implements several resilience patterns to ensure high availability and fault tolerance:
+
+1. **Circuit Breaker**: Prevents cascading failures by stopping calls to a service that is failing repeatedly.
+2. **Retry**: Automatically retries failed calls to handle transient faults.
+3. **Fallback**: Provides alternative behavior when a service call fails, ensuring the application can continue to function.
+4. **Load Balancing**: Distributes requests across multiple instances of a service to improve performance and availability.
+
+These patterns work together to create a robust, fault-tolerant system that can handle failures gracefully and maintain service availability.
+
 ## Database
 
 The application uses MySQL as its database:
