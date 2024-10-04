@@ -26,11 +26,11 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8097
-  # rabbitmq:
-  #   host: localhost
-  #   port: 5672
-  #   username: guest
-  #   password: guest
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 eureka:
   instance:

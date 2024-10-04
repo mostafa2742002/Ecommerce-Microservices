@@ -14,7 +14,7 @@ services:
     environment:
       MYSQL_DATABASE: mydb
       MYSQL_ROOT_PASSWORD: root
-      # SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 10s
@@ -24,20 +24,20 @@ services:
     networks:
       - ecommerce
 
-  # rabbitmq:
-  #   image: rabbitmq:3.13-management
-  #   hostname: rabbitmq
-  #   ports:
-  #   - 5672:5672
-  #   - 15672:15672
-  #   healthcheck:
-  #     test: rabbitmq-diagnostics check_port_connectivity
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 10
-  #     start_period: 5s
-  #   networks:
-  #     - ecommerce
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    hostname: rabbitmq
+    ports:
+    - 5672:5672
+    - 15672:15672
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    networks:
+      - ecommerce
 
   configservice:
     image: "sasa274/ecommerce-configservice:v4"
@@ -48,17 +48,17 @@ services:
       resources:
         limits:
           memory: 700m
-    # depends_on:
-    #   rabbitmq:
-    #     condition: service_healthy
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     healthcheck:
       test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 10s
-    # environment:
-    #   SPRING_RABBITMQ_HOST: "rabbitmq"
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbitmq"
     networks:
       - ecommerce
 
@@ -72,8 +72,8 @@ services:
         limits:
           memory: 700m
     depends_on:
-      # rabbitmq:
-      #   condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
       configservice:
         condition: service_healthy
     healthcheck:
@@ -83,7 +83,7 @@ services:
       retries: 10
       start_period: 10s
     environment:
-      # SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_APPLICATION_NAME: "eurekaservice"
       SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaservice:8070/eureka/
@@ -142,7 +142,7 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "gatewayservice"
-      # SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaservice:8070/eureka/
@@ -173,7 +173,7 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "userservice"
-      # SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
@@ -208,7 +208,7 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "cartservice"
-      # SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
@@ -242,7 +242,7 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "orderservice"
-      # SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
@@ -276,7 +276,7 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "productservice"
-      # SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
@@ -310,7 +310,7 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "inventoryservice"
-      # SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
@@ -344,7 +344,7 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "paymentservice"
-      # SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
       SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
