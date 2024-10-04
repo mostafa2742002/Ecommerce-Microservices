@@ -60,7 +60,7 @@ services:
     # environment:
     #   SPRING_RABBITMQ_HOST: "rabbitmq"
     networks:
-      - ecommerce 
+      - ecommerce
 
   eurekaservice:
     image: "sasa274/ecommerce-eurekaservice:v4"
@@ -88,7 +88,31 @@ services:
       SPRING_CONFIG_IMPORT: configserver:http://configservice:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaservice:8070/eureka/
     networks:
-      - ecommerce 
+      - ecommerce
+
+  authservice:
+    container_name: "auth-service"
+    image: "sasa274/ecommerce-authorizationservice:v4" # Replace with your actual image name
+    ports:
+      - "8097:8097" # This corresponds to the server port defined in the auth server's config
+    depends_on:
+      ecommercedb:
+        condition: service_healthy
+      eurekaservice:
+        condition: service_healthy
+      configservice:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ecommercedb:3306/mydb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_SECURITY_OAUTH2_AUTHORIZATIONSERVER_CLIENT_CLIENT-1_REGISTRATION_CLIENT-ID: client
+      SPRING_SECURITY_OAUTH2_AUTHORIZATIONSERVER_CLIENT_CLIENT-1_REGISTRATION_CLIENT-SECRET: "$2a$10$Imi.iQHZGJI89xwDXeMGROvgf6ZGrhJNaY5Gu/R7bv4Xlb6YTb1XC"
+      SPRING_SECURITY_OAUTH2_AUTHORIZATIONSERVER_CLIENT_PUBLIC-CLIENT_REGISTRATION_CLIENT-ID: public-client
+      SPRING_SECURITY_OAUTH2_AUTHORIZATIONSERVER_CLIENT_PUBLIC-CLIENT_REGISTRATION_CLIENT-AUTHENTICATION-METHODS: none
+    networks:
+      - ecommerce
 
   gatewayservice:
     image: "sasa274/ecommerce-gatewayservice:v4"
@@ -125,7 +149,6 @@ services:
     networks:
       - ecommerce
 
-
   userservice:
     image: "sasa274/ecommerce-userservice:v4"
     container_name: "e-userservice"
@@ -157,10 +180,9 @@ services:
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "root"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaservice:8070/eureka/
-      
+
     networks:
       - ecommerce
-      
 
   cartservice:
     image: "sasa274/ecommerce-cartservice:v4"
@@ -263,7 +285,6 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaservice:8070/eureka/
     networks:
       - ecommerce
-
 
   inventoryservice:
     image: "sasa274/ecommerce-inventoryservice:v4"

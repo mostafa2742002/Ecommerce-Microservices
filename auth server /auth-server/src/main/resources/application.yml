@@ -58,6 +58,12 @@ logging:
           authorizationserver: TRACE
     
 
+info:
+  app:
+    name: auth-server
+    description: "Authorization Server"
+    version: "1.0.0"
+
 
 server:
   port: 8097
