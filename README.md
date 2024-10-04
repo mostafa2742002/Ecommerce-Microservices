@@ -104,6 +104,71 @@ To run this application, you need to have the following installed on your system
 - Port: 8085
 - Purpose: Handles payment processing for orders.
 
+## Gateway Service Details
+
+The Gateway Service acts as the entry point for the e-commerce application, routing requests to appropriate microservices and providing essential features like authentication, circuit breaking, and retry mechanisms.
+
+### Key Features
+
+1. **Routing**: The Gateway routes requests to different microservices based on the path. All routes are prefixed with `/e-commerce/` followed by the service name.
+
+2. **Path Rewriting**: The Gateway rewrites the paths to remove the `/e-commerce/{servicename}/` prefix before forwarding the request to the target service.
+
+3. **Circuit Breaker**: Implemented using Resilience4j, each service route has its own circuit breaker configuration with a fallback URI.
+
+4. **Retry Mechanism**: GET requests are automatically retried up to 3 times with exponential backoff.
+
+5. **Token Relay**: The Gateway relays authentication tokens to the microservices, ensuring secure communication.
+
+6. **Load Balancing**: Requests are load-balanced across service instances using the "lb" scheme in the route URIs.
+
+### Configured Routes
+
+The Gateway is configured to route requests to the following services:
+
+- Cart Service: `/e-commerce/cartservice/**`
+- Inventory Service: `/e-commerce/inventoryservice/**`
+- Order Service: `/e-commerce/orderservice/**`
+- Payment Service: `/e-commerce/paymentservice/**`
+- Product Service: `/e-commerce/productservice/**`
+- User Service: `/e-commerce/userservice/**`
+
+### Circuit Breaker Configuration
+
+Each service has its own named circuit breaker:
+
+- Cart Service: `cartcircuitbreaker`
+- Inventory Service: `inventorycircuitbreaker`
+- Order Service: `ordercircuitbreaker`
+- Payment Service: `paymentcircuitbreaker`
+- Product Service: `productcircuitbreaker`
+- User Service: `usercircuitbreaker`
+
+The default circuit breaker configuration includes a 4-second timeout.
+
+### Security Configuration
+
+The Gateway implements the following security measures:
+
+- CORS is enabled.
+- All actuator endpoints are publicly accessible.
+- OAuth2 login is configured.
+- The Gateway acts as an OAuth2 Resource Server with JWT authentication.
+
+### Usage
+
+To access a specific service through the Gateway, use the following URL pattern:
+
+```
+http://localhost:8072/e-commerce/{servicename}/{endpoint}
+```
+
+For example, to access the user service:
+
+```
+http://localhost:8072/e-commerce/userservice/users
+```
+
 ## Database
 
 The application uses MySQL as its database:
@@ -169,11 +234,3 @@ If you encounter any issues:
    docker-compose build --no-cache
    docker-compose up -d
    ```
-
-## Contributing
-
-Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
-
-## License
-
-This project is licensed under the [Your License] - see the LICENSE.md file for details.
