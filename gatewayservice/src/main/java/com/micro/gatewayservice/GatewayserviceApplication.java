@@ -107,8 +107,10 @@ public class GatewayserviceApplication {
 	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 		http
 				// we need to allow cors for the gateway
+				// we will make all actuator endpoints public
 				.cors(withDefaults())
 				.authorizeExchange(exchanges -> exchanges
+						.pathMatchers("/actuator/**").permitAll()
 						.anyExchange().authenticated())
 				.oauth2Login(withDefaults())
 				.oauth2ResourceServer(ServerHttpSecurity.OAuth2ResourceServerSpec::jwt);
