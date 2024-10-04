@@ -18,7 +18,7 @@ spring:
           client-1:
             registration:
               client-id: client
-              client-secret: "{noop}asd" # Ensure consistency with Gateway
+              client-secret: "$2a$10$Imi.iQHZGJI89xwDXeMGROvgf6ZGrhJNaY5Gu/R7bv4Xlb6YTb1XC" # Ensure consistency with Gateway
               client-authentication-methods:
                 - client_secret_basic
               authorization-grant-types:
@@ -52,11 +52,12 @@ logging:
     org:
       springframework:
         security:
-          oauth2:
-            authorizationserver: TRACE
-          web:
-            filter:
-              OAuth2AuthorizationFilter: TRACE
+          oauth2: TRACE
+          web: TRACE
+        oauth2:
+          authorizationserver: TRACE
+    
+
 
 server:
   port: 8097

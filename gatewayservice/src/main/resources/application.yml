@@ -16,7 +16,7 @@ spring:
           spring:
             provider: spring
             client-id: client
-            client-secret: "{noop}asd" # Added {noop} for consistency
+            client-secret: "asd" # Added {noop} for consistency
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_basic
             redirect-uri: "http://localhost:8072/login/oauth2/code/spring"
