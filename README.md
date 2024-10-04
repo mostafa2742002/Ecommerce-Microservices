@@ -1,0 +1,179 @@
+# E-Commerce Microservices Application
+
+## Project Overview
+
+This project is a comprehensive e-commerce application built using a microservices architecture. It consists of multiple services that work together to provide a full-fledged online shopping experience, including user management, product catalog, shopping cart, order processing, inventory management, and payment handling.
+
+## Architecture
+
+The application is composed of the following microservices:
+
+1. Config Service (Port: 8071)
+2. Eureka Service (Port: 8070)
+3. Gateway Service (Port: 8072)
+4. Authorization Service (Port: 8097)
+5. User Service (Port: 8080)
+6. Cart Service (Port: 8081)
+7. Order Service (Port: 8082)
+8. Product Service (Port: 8083)
+9. Inventory Service (Port: 8084)
+10. Payment Service (Port: 8085)
+
+Additionally, the project includes:
+- MySQL database (Port: 3307)
+- RabbitMQ message broker (Ports: 5672, 15672)
+
+## Prerequisites
+
+To run this application, you need to have the following installed on your system:
+
+- Docker
+- Docker Compose
+
+## Getting Started
+
+1. Clone the repository containing the Docker Compose file.
+
+2. Navigate to the project directory.
+
+3. Run the following command to start all services:
+
+   ```
+   docker-compose up -d
+   ```
+
+   This command will download the necessary Docker images and start all the services defined in the Docker Compose file.
+
+4. Wait for all services to start and become healthy. You can monitor the status using:
+
+   ```
+   docker-compose ps
+   ```
+
+5. Once all services are up and running, you can access the application through the Gateway Service at `http://localhost:8072`.
+
+## Service Details
+
+### Config Service
+- Image: sasa274/ecommerce-configservice:v4
+- Port: 8071
+- Purpose: Centralized configuration management for all microservices.
+
+### Eureka Service
+- Image: sasa274/ecommerce-eurekaservice:v4
+- Port: 8070
+- Purpose: Service discovery and registration.
+
+### Gateway Service
+- Image: sasa274/ecommerce-gatewayservice:v4
+- Port: 8072
+- Purpose: API Gateway for routing requests to appropriate microservices.
+
+### Authorization Service
+- Image: sasa274/ecommerce-authorizationservice:v4
+- Port: 8097
+- Purpose: Handles user authentication and authorization.
+
+### User Service
+- Image: sasa274/ecommerce-userservice:v4
+- Port: 8080
+- Purpose: Manages user accounts and profiles.
+
+### Cart Service
+- Image: sasa274/ecommerce-cartservice:v4
+- Port: 8081
+- Purpose: Handles shopping cart operations.
+
+### Order Service
+- Image: sasa274/ecommerce-orderservice:v4
+- Port: 8082
+- Purpose: Manages order creation and processing.
+
+### Product Service
+- Image: sasa274/ecommerce-productservice:v4
+- Port: 8083
+- Purpose: Manages product catalog and information.
+
+### Inventory Service
+- Image: sasa274/ecommerce-inventoryservice:v4
+- Port: 8084
+- Purpose: Tracks product inventory and stock levels.
+
+### Payment Service
+- Image: sasa274/ecommerce-paymentservice:v4
+- Port: 8085
+- Purpose: Handles payment processing for orders.
+
+## Database
+
+The application uses MySQL as its database:
+- Image: mysql:latest
+- Port: 3307 (mapped to 3306 inside the container)
+- Environment variables:
+  - MYSQL_DATABASE: mydb
+  - MYSQL_ROOT_PASSWORD: root
+
+## Message Broker
+
+RabbitMQ is used as the message broker for inter-service communication:
+- Image: rabbitmq:3.13-management
+- Ports: 
+  - 5672 (AMQP protocol)
+  - 15672 (Management UI)
+
+## Networking
+
+All services are connected through a custom bridge network named `ecommerce`.
+
+## Health Checks
+
+Each service includes health checks to ensure they are running correctly before being marked as ready. The Gateway Service depends on the health of all other services before starting.
+
+## Resource Limits
+
+Most services have a memory limit of 700MB to prevent resource exhaustion.
+
+## Configuration
+
+Services are configured to use the Config Service for centralized configuration management. The `SPRING_CONFIG_IMPORT` environment variable is set to point to the Config Service URL.
+
+## Service Discovery
+
+All microservices are configured to register with Eureka for service discovery. The `EUREKA_CLIENT_SERVICEURL_DEFAULTZONE` environment variable is set to the Eureka Service URL.
+
+## Security
+
+The Authorization Service is configured with OAuth2 settings. Make sure to review and adjust the client IDs and secrets as needed for your production environment.
+
+## Troubleshooting
+
+If you encounter any issues:
+
+1. Check the logs of the specific service:
+   ```
+   docker-compose logs [service_name]
+   ```
+
+2. Ensure all services are healthy:
+   ```
+   docker-compose ps
+   ```
+
+3. Restart a specific service:
+   ```
+   docker-compose restart [service_name]
+   ```
+
+4. If problems persist, try rebuilding the images:
+   ```
+   docker-compose build --no-cache
+   docker-compose up -d
+   ```
+
+## Contributing
+
+Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the [Your License] - see the LICENSE.md file for details.
