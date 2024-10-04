@@ -269,6 +269,63 @@ Most services have a memory limit of 700MB to prevent resource exhaustion.
 
 Services are configured to use the Config Service for centralized configuration management. The `SPRING_CONFIG_IMPORT` environment variable is set to point to the Config Service URL.
 
+
+# E-Commerce Microservices Application
+
+[Previous content remains unchanged]
+
+## Configuration Management
+
+This application uses a centralized configuration management approach, leveraging Spring Cloud Config for externalized configuration.
+
+### Configuration Repository
+
+All configuration files for the microservices are stored in a dedicated GitHub repository:
+
+[https://github.com/mostafa2742002/Ecommerce-Microservices-config](https://github.com/mostafa2742002/Ecommerce-Microservices-config)
+
+### Environment-Specific Configurations
+
+Each service has two configuration files:
+
+1. A default configuration file for the development environment
+2. A production-specific configuration file
+
+This setup allows for environment-specific settings, making it easier to manage different configurations for development, testing, and production environments.
+
+### Dynamic Configuration Updates
+
+The application implements a dynamic configuration update mechanism:
+
+1. When changes are pushed to the configuration repository on GitHub, a webhook is triggered.
+2. The webhook sends a request to the Config Server.
+3. The Config Server then refreshes the configurations for all services.
+
+This mechanism ensures that configuration changes can be applied to the running services without requiring a restart, enabling seamless updates to application settings.
+
+### Usage
+
+To make use of this centralized configuration:
+
+1. Developers should make configuration changes in the GitHub repository mentioned above.
+2. For environment-specific changes, modify the appropriate file (default or production).
+3. After pushing changes to the repository, the services will automatically update their configurations.
+
+### Benefits
+
+- Centralized management of all service configurations
+- Easy differentiation between development and production settings
+- Dynamic updates without service restarts
+- Version control and history of configuration changes
+
+### Caution
+
+When making changes to the configuration:
+
+- Ensure that the changes are appropriate for the target environment.
+- Test configuration changes in a non-production environment before applying them to production.
+- Be aware that some configuration changes might require service restarts to take effect fully.
+
 ## Service Discovery
 
 All microservices are configured to register with Eureka for service discovery. The `EUREKA_CLIENT_SERVICEURL_DEFAULTZONE` environment variable is set to the Eureka Service URL.
